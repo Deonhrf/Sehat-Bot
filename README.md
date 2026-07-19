@@ -32,18 +32,17 @@ Dibuat dengan Python, Flask, MySQL, dan Groq Llama-3.1
 
 
 ### 1. Clone & Masuk Folder
-git clone https://github.com/username/sehat-bot.git
-cd sehat-bot
+- ** git clone https://github.com/username/sehat-bot.git
+- ** cd sehat-bot
 
 
 ### 2. Buat Virtual Environment
-python -m venv venv
+- ** python -m venv venv
 
-Windows
+- ** Windows
 venv\Scripts\activate
 
-Mac/Linux
-source venv/bin/activate
+- Mac/Linux source venv/bin/activate
 
 
 ### 3. Install Library
