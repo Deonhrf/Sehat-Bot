@@ -32,26 +32,23 @@ Dibuat dengan Python, Flask, MySQL, dan Groq Llama-3.1
 
 
 ### 1. Clone & Masuk Folder
-- ** git clone https://github.com/username/sehat-bot.git
-- ** cd sehat-bot
+- git clone https://github.com/username/sehat-bot.git
+- cd sehat-bot
 
 
 ### 2. Buat Virtual Environment
-- ** python -m venv venv
+- python -m venv venv
 
-- ** Windows
-venv\Scripts\activate
+- Windows: venv\Scripts\activate
 
-- Mac/Linux source venv/bin/activate
+- Mac/Linux: source venv/bin/activate
 
 
 ### 3. Install Library
-pip install -r requirements.txt
-
-
+- pip install -r requirements.txt
 
 ### 4. Setup Database MySQL
-Login ke MySQL dan jalankan query ini:
+- Login ke MySQL dan jalankan query ini:
 
 CREATE DATABASE sehatbot;
 
@@ -86,15 +83,14 @@ CREATE TABLE chat_history (
 
 
 ### 5. Setup File .env
-Buat file .env di root folder dan isi:
+- Buat file .env di root folder dan isi:
 
-SECRET_KEY=ubah_jadi_kunci_rahasia_panjang_banget
+- SECRET_KEY=ubah_jadi_kunci_rahasia_panjang_banget
 
-GROQ_API_KEY=gsk_masukkan_kunci_groq_kamu_disini
-
+- GROQ_API_KEY=gsk_masukkan_kunci_groq_kamu_disini
 
 ### 6. Jalankan Aplikasi
-python app.py
+- python app.py
 
 
 
