@@ -39,10 +39,10 @@ cd sehat-bot
 ### 2. Buat Virtual Environment
 python -m venv venv
 
-# Windows
+Windows
 venv\Scripts\activate
 
-# Mac/Linux
+Mac/Linux
 source venv/bin/activate
 
 
@@ -57,11 +57,16 @@ CREATE DATABASE sehatbot;
 USE sehatbot;
 
 CREATE TABLE users (
+
     id INT AUTO_INCREMENT PRIMARY KEY, 
+    
     name VARCHAR(100) NOT NULL, 
+    
     email VARCHAR(100) UNIQUE NOT NULL, 
+    
     password VARCHAR(255) NOT NULL
 );
+
 
 CREATE TABLE chat_history (
 
