@@ -53,7 +53,9 @@ pip install -r requirements.txt
 
 ### 4. Setup Database MySQL
 Login ke MySQL dan jalankan query ini:
+
 CREATE DATABASE sehatbot;
+
 USE sehatbot;
 
 CREATE TABLE users (
@@ -86,7 +88,9 @@ CREATE TABLE chat_history (
 
 ### 5. Setup File .env
 Buat file .env di root folder dan isi:
+
 SECRET_KEY=ubah_jadi_kunci_rahasia_panjang_banget
+
 GROQ_API_KEY=gsk_masukkan_kunci_groq_kamu_disini
 
 
