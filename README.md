@@ -47,7 +47,8 @@ Dibuat dengan Python, Flask, MySQL, dan Groq Llama-3.1
 ### 3. Install Library
 - pip install -r requirements.txt
 
-### 4. Setup Database MySQL
+### 4. Setup Database MySQ
+```
 - Login ke MySQL dan jalankan query ini:
 
 - CREATE DATABASE sehatbot;
@@ -80,6 +81,7 @@ Dibuat dengan Python, Flask, MySQL, dan Groq Llama-3.1
     
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+```
 
 
 ### 5. Setup File .env
