@@ -50,11 +50,11 @@ Dibuat dengan Python, Flask, MySQL, dan Groq Llama-3.1
 ### 4. Setup Database MySQL
 - Login ke MySQL dan jalankan query ini:
 
-CREATE DATABASE sehatbot;
+- CREATE DATABASE sehatbot;
 
-USE sehatbot;
+- USE sehatbot;
 
-CREATE TABLE users (
+- CREATE TABLE users (
 
     id INT AUTO_INCREMENT PRIMARY KEY, 
     
@@ -66,7 +66,7 @@ CREATE TABLE users (
 );
 
 
-CREATE TABLE chat_history (
+- CREATE TABLE chat_history (
 
     id INT AUTO_INCREMENT PRIMARY KEY, 
     
