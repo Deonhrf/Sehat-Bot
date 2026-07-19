@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar — Sehat-Bot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: {
+          heading: ['Poppins', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+        },
+        colors: {
+          teal: {
+            50: '#effcf9', 100: '#c9f6ec', 200: '#93ecda',
+            300: '#5edcc4', 400: '#34c7ab', 500: '#1bab90',
+            600: '#128a74', 700: '#106f5f', 800: '#11594d',
+            900: '#0f4a41',
+          },
+          skyblue: {
+            50: '#eff9ff', 100: '#dff2ff', 200: '#b9e6ff',
+            300: '#7dd3ff', 400: '#3abcff', 500: '#0fa1f5',
+            600: '#0080d1', 700: '#0166a8', 800: '#06578a',
+            900: '#0b4972',
+          }
+        },
+        animation: {
+          'float': 'float 6s ease-in-out infinite',
+          'float-delay': 'float 6s ease-in-out 2s infinite',
+        },
+        keyframes: {
+          float: {
+            '0%, 100%': { transform: 'translateY(0px)' },
+            '50%': { transform: 'translateY(-18px)' },
+          }
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family: 'Inter', sans-serif; }
+  h1, h2, h3, h4, .font-heading { font-family: 'Poppins', sans-serif; }
+  .hero-gradient {
+    background: linear-gradient(135deg, #effcf9 0%, #eff9ff 45%, #ffffff 100%);
+  }
+  .dark .hero-gradient {
+    background: linear-gradient(135deg, #0b1e1a 0%, #0b1a26 45%, #0a1220 100%);
+  }
+  .brand-gradient-text {
+    background: linear-gradient(90deg, #128a74 0%, #0080d1 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .btn-gradient {
+    background: linear-gradient(90deg, #1bab90 0%, #0fa1f5 100%);
+  }
+  .btn-gradient:hover {
+    background: linear-gradient(90deg, #128a74 0%, #0080d1 100%);
+  }
+  .glass {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .input-field {
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .input-field:focus {
+    outline: none;
+    border-color: #1bab90;
+    box-shadow: 0 0 0 4px rgba(27, 171, 144, 0.15);
+  }
+  .strength-bar {
+    transition: background-color .25s ease, width .25s ease;
+  }
+</style>
+</head>
+<body class="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-300">
+
+<!-- NAVBAR -->
+<nav class="fixed top-0 left-0 right-0 z-50 glass bg-white/70 dark:bg-slate-900/70 border-b border-teal-100/60 dark:border-slate-800">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 py-4 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2.5">
+      <div class="w-10 h-10 rounded-xl btn-gradient flex items-center justify-center shadow-lg shadow-teal-500/20">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 21C12 21 4 14.6 4 9.5C4 6.46 6.46 4 9.5 4C11.04 4 12.5 4.73 13.5 5.94C14.5 4.73 15.96 4 17.5 4C20.54 4 23 6.46 23 9.5C23 10.05 22.94 10.58 22.83 11.1M9 12H11L12.5 9L14.5 15L16 12H19" />
+        </svg>
+      </div>
+      <span class="font-heading font-bold text-xl text-slate-800 dark:text-white">Sehat<span class="brand-gradient-text">-Bot</span></span>
+    </a>
+
+    <div class="flex items-center gap-3">
+      <button id="darkToggle" aria-label="Toggle dark mode" class="w-10 h-10 rounded-full flex items-center justify-center bg-teal-50 dark:bg-slate-800 text-teal-600 dark:text-yellow-300 hover:bg-teal-100 dark:hover:bg-slate-700 transition">
+        <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354z" />
+        </svg>
+        <svg id="iconSun" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      </button>
+      <span class="hidden sm:inline text-sm text-slate-500 dark:text-slate-400">Sudah punya akun?</span>
+      <a href="login.html" class="inline-flex btn-gradient text-white font-semibold text-sm px-5 py-2.5 rounded-full shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-500/30 transition">
+        Masuk
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- REGISTER SECTION -->
+<section class="hero-gradient min-h-screen py-12 relative overflow-hidden flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+  <!-- Elemen Dekoratif Latar Belakang (Diperhalus) -->
+  <div class="absolute top-10 left-10 w-48 h-48 rounded-full bg-teal-400/10 dark:bg-teal-500/5 blur-3xl animate-float pointer-events-none"></div>
+  <div class="absolute bottom-10 right-10 w-64 h-64 rounded-full bg-sky-400/10 dark:bg-sky-500/5 blur-3xl animate-float-delay pointer-events-none"></div>
+
+  <div class="max-w-md w-full px-4 sm:px-6 relative">
+    
+    <!-- Bagian Header (Lebih Ringkas & Seimbang) -->
+    <div class="text-center mb-6">
+      <span class="inline-flex items-center gap-1.5 bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400 text-xs font-semibold px-3 py-1 rounded-full mb-2.5 border border-teal-100/50 dark:border-teal-900/30">
+        <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></span>
+        Gratis Selamanya
+      </span>
+
+      <!-- Ukuran Title Diperkecil & Diberi Gradient Modern -->
+      <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-800 dark:text-white mb-1">
+        Buat Akun <span class="bg-gradient-to-r from-teal-500 to-sky-500 bg-clip-text text-transparent">Sehat-Bot</span>
+      </h1>
+      
+      <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+        Mulai konsultasi kesehatan pribadi Anda dalam hitungan detik.
+      </p>
+    </div>
+
+    <!-- Container Form (Lebih Rapi & Solid) -->
+    <form  action="register" method="POST"  class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl shadow-teal-950/5 p-6 sm:p-8 border border-slate-100 dark:border-slate-800/80">
+
+      <!-- Input Nama -->
+      <div class="mb-4">
+        <label for="name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Nama Lengkap</label>
+        <div class="relative">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          <input type="text" id="name" name="name" required placeholder="Nama Anda"
+            class="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/10 focus:border-teal-500 transition-all">
+        </div>
+      </div>
+
+      <!-- Input Email -->
+      <div class="mb-4">
+        <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Alamat Email</label>
+        <div class="relative">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          <input type="email" id="email" name="email" required placeholder="nama@email.com"
+            class="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/10 focus:border-teal-500 transition-all">
+        </div>
+      </div>
+
+      <!-- Input Password -->
+      <div class="mb-4">
+        <label for="password" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Kata Sandi</label>
+        <div class="relative">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          <input type="password" id="password" name="password" required placeholder="Minimal 8 karakter"
+            class="w-full pl-10 pr-10 py-2.5 text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/10 focus:border-teal-500 transition-all">
+          <button type="button" id="togglePassword" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-teal-500 dark:hover:text-teal-400 transition">
+            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </button>
+        </div>
+        <!-- Password Strength Indicator (Lebih Tipis & Minimalis) -->
+        <div class="flex gap-1 mt-2">
+          <div id="bar1" class="strength-bar h-1 flex-1 rounded-full bg-slate-100 dark:bg-slate-800"></div>
+          <div id="bar2" class="strength-bar h-1 flex-1 rounded-full bg-slate-100 dark:bg-slate-800"></div>
+          <div id="bar3" class="strength-bar h-1 flex-1 rounded-full bg-slate-100 dark:bg-slate-800"></div>
+          <div id="bar4" class="strength-bar h-1 flex-1 rounded-full bg-slate-100 dark:bg-slate-800"></div>
+        </div>
+        <p id="strengthLabel" class="text-[10px] text-slate-400 dark:text-slate-500 mt-1">Gunakan kombinasi huruf, angka, dan simbol</p>
+      </div>
+
+      <!-- Checkbox Syarat & Ketentuan -->
+      <label class="flex items-start gap-2.5 my-5 cursor-pointer select-none">
+        <input type="checkbox" required class="w-4 h-4 mt-0.5 rounded border-slate-300 dark:border-slate-700 text-teal-500 focus:ring-teal-500/20 bg-slate-50 dark:bg-slate-950">
+        <span class="text-xs text-slate-500 dark:text-slate-400 leading-normal">
+          Saya menyetujui <a href="#" class="text-teal-600 dark:text-teal-400 font-medium hover:underline">Syarat Layanan</a> dan <a href="#" class="text-teal-600 dark:text-teal-400 font-medium hover:underline">Kebijakan Privasi</a>.
+        </span>
+      </label>
+
+      <!-- Tombol Buat Akun -->
+      <button type="submit" class="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-medium py-2.5 px-4 rounded-xl shadow-md shadow-teal-500/10 hover:shadow-lg hover:shadow-teal-500/20 transition duration-200 flex items-center justify-center gap-2 text-sm">
+        Buat Akun
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </button>
+
+      <!-- Pembatas (Divider) -->
+      <div class="flex items-center gap-3 my-5">
+        <div class="h-px flex-1 bg-slate-100 dark:bg-slate-800"></div>
+        <span class="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-semibold">atau daftar dengan</span>
+        <div class="h-px flex-1 bg-slate-100 dark:bg-slate-800"></div>
+      </div>
+
+      <!-- Tombol Google -->
+      <button type="button" class="w-full flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-800 rounded-xl py-2.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        Google
+      </button>
+
+      <!-- Footer Form -->
+      <p class="text-center text-xs text-slate-500 dark:text-slate-400 mt-6">
+        Sudah punya akun?
+        <a href="/login" class="text-teal-600 dark:text-teal-400 font-semibold hover:underline">Masuk di sini</a>
+      </p>
+    </form>
+
+    <!-- Catatan Medis/Disclaimer (Lebih Ringkas & Menyatu) -->
+    <p class="text-center text-[11px] text-slate-400 dark:text-slate-500 mt-5 leading-relaxed px-4">
+      Sehat-Bot memberikan informasi kesehatan umum, bukan diagnosis medis.<br>
+      Untuk kondisi darurat, hubungi tenaga medis profesional.
+    </p>
+  </div>
+</section>
+
+<script>
+  const darkToggle = document.getElementById('darkToggle');
+  const iconMoon = document.getElementById('iconMoon');
+  const iconSun = document.getElementById('iconSun');
+
+  function applyDarkPreference() {
+    const isDark = localStorage.getItem('sehatbot-theme') === 'dark';
+    document.documentElement.classList.toggle('dark', isDark);
+    iconMoon.classList.toggle('hidden', isDark);
+    iconSun.classList.toggle('hidden', !isDark);
+  }
+  applyDarkPreference();
+
+  darkToggle.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('sehatbot-theme', isDark ? 'dark' : 'light');
+    iconMoon.classList.toggle('hidden', isDark);
+    iconSun.classList.toggle('hidden', !isDark);
+  });
+
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('password');
+  const eyeIcon = document.getElementById('eyeIcon');
+  togglePassword.addEventListener('click', () => {
+    const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+    eyeIcon.innerHTML = isPassword
+      ? '<path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.025 10.025 0 012.132-3.639m3.542-2.457A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.965 9.965 0 01-4.132 5.411M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18"/>'
+      : '<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+  });
+
+  const bars = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3'), document.getElementById('bar4')];
+  const strengthLabel = document.getElementById('strengthLabel');
+  const colors = ['bg-red-400', 'bg-orange-400', 'bg-teal-400', 'bg-teal-500'];
+  const labels = ['Lemah', 'Cukup', 'Baik', 'Kuat'];
+
+  passwordInput.addEventListener('input', () => {
+    const val = passwordInput.value;
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    bars.forEach((bar, i) => {
+      bar.classList.remove('bg-red-400', 'bg-orange-400', 'bg-teal-400', 'bg-teal-500', 'bg-slate-200', 'dark:bg-slate-700');
+      if (val.length === 0) {
+        bar.classList.add('bg-slate-200', 'dark:bg-slate-700');
+      } else if (i < score) {
+        bar.classList.add(colors[score - 1]);
+      } else {
+        bar.classList.add('bg-slate-200', 'dark:bg-slate-700');
+      }
+    });
+
+    strengthLabel.textContent = val.length === 0
+      ? 'Gunakan kombinasi huruf, angka, dan simbol'
+      : 'Kekuatan sandi: ' + labels[Math.max(score - 1, 0)];
+  });
+</script>
+</body>
+</html>

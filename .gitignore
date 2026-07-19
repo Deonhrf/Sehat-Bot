@@ -1,0 +1,46 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+*.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Database & Laragon
+*.db
+*.sqlite3
+dump/
+backups/
+
+# Secret & API Keys
+.env
+config.py
+secrets.json
+api_keys.py
+*grok*.key
+*groq*.key
+
+# Logs
+*.log
+logs/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Temporary files
+temp/
+tmp/
+__pycache__/
+*.pytest_cache/
+
+# Flask specific
+instance/
+.webassets-cache

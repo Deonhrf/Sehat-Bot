@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat — Sehat-Bot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: {
+          heading: ['Poppins', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+        },
+        colors: {
+          teal: {
+            50: '#effcf9', 100: '#c9f6ec', 200: '#93ecda',
+            300: '#5edcc4', 400: '#34c7ab', 500: '#1bab90',
+            600: '#128a74', 700: '#106f5f', 800: '#11594d', 900: '#0f4a41',
+          },
+          skyblue: {
+            50: '#eff9ff', 100: '#dff2ff', 200: '#b9e6ff',
+            300: '#7dd3ff', 400: '#3abcff', 500: '#0fa1f5',
+            600: '#0080d1', 700: '#0166a8', 800: '#06578a', 900: '#0b4972',
+          }
+        }
+      }
+    }
+  }
+</script>
+<style>
+  html, body { height: 100%; font-family: 'Inter', sans-serif; }
+  h1,h2,h3,.font-heading { font-family: 'Poppins', sans-serif; }
+  .btn-gradient { background: linear-gradient(90deg, #1bab90 0%, #0fa1f5 100%); }
+  .btn-gradient:hover { background: linear-gradient(90deg, #128a74 0%, #0080d1 100%); }
+  .bg-app-gradient { background: linear-gradient(135deg, #f2fdfb 0%, #eff9ff 100%); }
+  .dark .bg-app-gradient { background: linear-gradient(135deg, #0b1a17 0%, #0a1522 100%); }
+
+  #chatWindow::-webkit-scrollbar { width: 6px; }
+  #chatWindow::-webkit-scrollbar-thumb { background: #93ecda; border-radius: 10px; }
+  .dark #chatWindow::-webkit-scrollbar-thumb { background: #106f5f; }
+
+  .msg-in { animation: msgIn .28s ease-out; }
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .typing-dot { animation: typingBounce 1.2s infinite ease-in-out; }
+  .typing-dot:nth-child(2) { animation-delay: .15s; }
+  .typing-dot:nth-child(3) { animation-delay: .3s; }
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: .5; }
+    30% { transform: translateY(-5px); opacity: 1; }
+  }
+
+  /* Logout confirm modal */
+  #logoutModal { transition: opacity .2s ease; }
+  #logoutModal.hidden-modal { opacity: 0; pointer-events: none; }
+  #logoutModalCard { transition: transform .2s ease, opacity .2s ease; }
+  #logoutModal.hidden-modal #logoutModalCard { transform: scale(.95); opacity: 0; }
+</style>
+</head>
+<body class="bg-app-gradient text-slate-800 dark:text-slate-100 h-screen overflow-hidden flex flex-col">
+
+<!-- HEADER -->
+<header class="flex-shrink-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-teal-100/70 dark:border-slate-800 px-4 sm:px-6 py-3 flex items-center justify-between z-20">
+  <div class="flex items-center gap-3">
+    <a href="/" class="w-10 h-10 rounded-full flex items-center justify-center text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-slate-800 transition">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+    </a>
+    <div class="w-11 h-11 rounded-full btn-gradient flex items-center justify-center text-white font-bold shadow-md shadow-teal-500/25 relative">
+      SB
+      <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-teal-400 border-2 border-white dark:border-slate-900 rounded-full"></span>
+    </div>
+    <div>
+      <p class="font-heading font-semibold text-slate-800 dark:text-white leading-tight">Sehat-Bot</p>
+      <p class="text-xs text-teal-600 dark:text-teal-400 flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> Online — siap membantu
+      </p>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <button id="infoToggle" class="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium bg-teal-50 dark:bg-slate-800 text-teal-700 dark:text-teal-300 px-3.5 py-2 rounded-full hover:bg-teal-100 dark:hover:bg-slate-700 transition">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      Info Sehat
+    </button>
+    <button id="darkToggle" class="w-10 h-10 rounded-full flex items-center justify-center bg-teal-50 dark:bg-slate-800 text-teal-600 dark:text-yellow-300 hover:bg-teal-100 dark:hover:bg-slate-700 transition">
+      <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354z" />
+      </svg>
+      <svg id="iconSun" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+      </svg>
+    </button>
+    <!-- LOGOUT BUTTON -->
+    <button id="logoutBtn" title="Keluar" class="w-10 h-10 sm:w-auto sm:px-4 rounded-full flex items-center justify-center gap-1.5 bg-red-50 dark:bg-red-900/30 text-red-500 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 transition text-xs font-medium">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+      </svg>
+      <span class="hidden sm:inline">Keluar</span>
+    </button>
+  </div>
+</header>
+
+<!-- MAIN LAYOUT -->
+<div class="flex flex-1 min-h-0">
+
+  <!-- SIDEBAR (desktop only) -->
+  <aside class="hidden lg:flex flex-col w-72 flex-shrink-0 bg-white/60 dark:bg-slate-900/60 border-r border-teal-100/70 dark:border-slate-800 p-5 overflow-y-auto">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-teal-100 dark:border-slate-700 mb-5">
+      <h3 class="font-heading font-semibold text-sm text-slate-800 dark:text-white mb-3 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        Tips Kesehatan Hari Ini
+      </h3>
+      <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Minumlah air putih minimal 8 gelas sehari untuk menjaga tubuh tetap terhidrasi dan bugar. 💧</p>
+    </div>
+
+    <div class="mb-3">
+      <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide mb-3 px-1">Topik Cepat</p>
+      <div class="flex flex-col gap-2">
+        <button class="quick-topic text-left text-sm bg-white dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-slate-700 border border-teal-100 dark:border-slate-700 rounded-xl px-4 py-2.5 transition flex items-center gap-2.5" data-msg="Saya sedang demam, apa yang harus saya lakukan?">
+          🌡️ <span>Demam</span>
+        </button>
+        <button class="quick-topic text-left text-sm bg-white dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-slate-700 border border-teal-100 dark:border-slate-700 rounded-xl px-4 py-2.5 transition flex items-center gap-2.5" data-msg="Kepala saya sering pusing, kenapa ya?">
+          🤕 <span>Sakit Kepala</span>
+        </button>
+        <button class="quick-topic text-left text-sm bg-white dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-slate-700 border border-teal-100 dark:border-slate-700 rounded-xl px-4 py-2.5 transition flex items-center gap-2.5" data-msg="Bagaimana pola makan sehat yang baik?">
+          🥗 <span>Pola Makan Sehat</span>
+        </button>
+        <button class="quick-topic text-left text-sm bg-white dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-slate-700 border border-teal-100 dark:border-slate-700 rounded-xl px-4 py-2.5 transition flex items-center gap-2.5" data-msg="Saya susah tidur akhir-akhir ini">
+          😴 <span>Susah Tidur</span>
+        </button>
+        <button class="quick-topic text-left text-sm bg-white dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-slate-700 border border-teal-100 dark:border-slate-700 rounded-xl px-4 py-2.5 transition flex items-center gap-2.5" data-msg="Saya merasa stres dengan pekerjaan">
+          🧘 <span>Manajemen Stres</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mt-auto bg-skyblue-50 dark:bg-slate-800 rounded-2xl p-4 border border-skyblue-100 dark:border-slate-700">
+      <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+        ⚠️ Sehat-Bot bukan pengganti dokter. Untuk kondisi darurat, segera hubungi layanan medis terdekat.
+      </p>
+    </div>
+  </aside>
+
+  <!-- CHAT AREA -->
+  <main class="flex-1 flex flex-col min-w-0">
+
+    <div id="chatWindow" class="flex-1 overflow-y-auto px-4 sm:px-8 py-6 space-y-5">
+
+      <!-- Welcome bubble -->
+      <div class="flex items-end gap-2.5 msg-in max-w-[85%] sm:max-w-[70%]">
+        <div class="w-8 h-8 rounded-full btn-gradient flex items-center justify-center text-white text-xs font-bold flex-shrink-0">SB</div>
+        <div>
+          <div class="bg-white dark:bg-slate-800 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border border-teal-50 dark:border-slate-700 text-sm leading-relaxed text-slate-700 dark:text-slate-200">
+            Halo <strong>{{ user_name  | capitalize  }}</strong> ! 👋<br>
+            Saya <strong>Sehat-Bot</strong>, asisten kesehatan virtual Anda. <br> 
+            Ceritakan keluhan atau pertanyaan kesehatan Anda, dan saya akan bantu semaksimal mungkin.
+          </div>
+          <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 ml-1">Sehat-Bot</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Suggestion chips (mobile) -->
+    <div class="lg:hidden flex gap-2 overflow-x-auto px-4 pb-2 pt-1 flex-shrink-0">
+      <button class="quick-topic flex-shrink-0 text-xs font-medium bg-white dark:bg-slate-800 border border-teal-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 px-3.5 py-1.5 rounded-full" data-msg="Saya sedang demam, apa yang harus saya lakukan?">🌡️ Demam</button>
+      <button class="quick-topic flex-shrink-0 text-xs font-medium bg-white dark:bg-slate-800 border border-teal-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 px-3.5 py-1.5 rounded-full" data-msg="Kepala saya sering pusing, kenapa ya?">🤕 Sakit Kepala</button>
+      <button class="quick-topic flex-shrink-0 text-xs font-medium bg-white dark:bg-slate-800 border border-teal-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 px-3.5 py-1.5 rounded-full" data-msg="Bagaimana pola makan sehat yang baik?">🥗 Pola Makan</button>
+      <button class="quick-topic flex-shrink-0 text-xs font-medium bg-white dark:bg-slate-800 border border-teal-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 px-3.5 py-1.5 rounded-full" data-msg="Saya susah tidur akhir-akhir ini">😴 Tidur</button>
+    </div>
+
+    <!-- Input bar -->
+    <div class="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-t border-teal-100/70 dark:border-slate-800 px-4 sm:px-8 py-4">
+      <form id="chatForm" class="flex items-end gap-3 max-w-4xl mx-auto">
+        <div class="flex-1 flex items-center bg-teal-50 dark:bg-slate-800 rounded-2xl px-4 py-1 border border-transparent focus-within:border-teal-300 dark:focus-within:border-teal-600 transition">
+          <input
+            id="messageInput"
+            type="text"
+            autocomplete="off"
+            placeholder="Tulis keluhan atau pertanyaan kesehatan Anda..."
+            class="flex-1 bg-transparent outline-none py-3 text-sm text-slate-700 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+          />
+        </div>
+        <button
+          type="submit"
+          id="sendBtn"
+          class="btn-gradient text-white w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg shadow-teal-500/25 hover:shadow-xl active:scale-95 transition-all flex-shrink-0 disabled:opacity-50"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+          </svg>
+        </button>
+      </form>
+      <p class="text-center text-[11px] text-slate-400 dark:text-slate-500 mt-2.5">
+        Sehat-Bot dapat membuat kesalahan. Untuk kondisi darurat, segera hubungi tenaga medis.
+      </p>
+    </div>
+  </main>
+</div>
+
+<!-- LOGOUT CONFIRM MODAL -->
+<div id="logoutModal" class="hidden-modal fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm px-4">
+  <div id="logoutModalCard" class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-teal-100 dark:border-slate-700 w-full max-w-sm p-6">
+    <div class="w-12 h-12 rounded-full bg-red-50 dark:bg-red-900/30 text-red-500 dark:text-red-400 flex items-center justify-center mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+      </svg>
+    </div>
+    <h3 class="font-heading font-semibold text-slate-800 dark:text-white text-lg mb-1.5">Keluar dari akun?</h3>
+    <p class="text-sm text-slate-500 dark:text-slate-400 mb-5 leading-relaxed">Anda akan keluar dari sesi Sehat-Bot. Riwayat chat pada sesi ini tidak akan tersimpan.</p>
+    <div class="flex gap-3">
+      <button id="cancelLogout" class="flex-1 text-sm font-medium py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition">Batal</button>
+      <button id="confirmLogout" class="flex-1 text-sm font-medium py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white transition">Ya, Keluar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---------- Dark mode ----------
+  const darkToggle = document.getElementById('darkToggle');
+  const iconMoon = document.getElementById('iconMoon');
+  const iconSun = document.getElementById('iconSun');
+
+  function applyDarkPreference() {
+    const isDark = localStorage.getItem('sehatbot-theme') === 'dark';
+    document.documentElement.classList.toggle('dark', isDark);
+    iconMoon.classList.toggle('hidden', isDark);
+    iconSun.classList.toggle('hidden', !isDark);
+  }
+  applyDarkPreference();
+
+  darkToggle.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('sehatbot-theme', isDark ? 'dark' : 'light');
+    iconMoon.classList.toggle('hidden', isDark);
+    iconSun.classList.toggle('hidden', !isDark);
+  });
+
+  // ---------- Logout ----------
+  const logoutBtn = document.getElementById('logoutBtn');
+  const logoutModal = document.getElementById('logoutModal');
+  const cancelLogout = document.getElementById('cancelLogout');
+  const confirmLogout = document.getElementById('confirmLogout');
+
+  function openLogoutModal() {
+    logoutModal.classList.remove('hidden-modal');
+  }
+  function closeLogoutModal() {
+    logoutModal.classList.add('hidden-modal');
+  }
+
+  logoutBtn.addEventListener('click', openLogoutModal);
+  cancelLogout.addEventListener('click', closeLogoutModal);
+  logoutModal.addEventListener('click', (e) => {
+    if (e.target === logoutModal) closeLogoutModal();
+  });
+
+  confirmLogout.addEventListener('click', async () => {
+    confirmLogout.disabled = true;
+    confirmLogout.textContent = 'Memproses...';
+    try {
+      // Sesuaikan endpoint logout backend Anda di sini
+      await fetch('/logout', { method: 'POST' });
+    } catch (err) {
+      // abaikan error jaringan, tetap arahkan ke halaman login
+    } finally {
+      window.location.href = '/login';
+    }
+  });
+
+  // ---------- Chat logic ----------
+  const chatWindow = document.getElementById('chatWindow');
+  const chatForm = document.getElementById('chatForm');
+  const messageInput = document.getElementById('messageInput');
+  const sendBtn = document.getElementById('sendBtn');
+
+  function scrollToBottom() {
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+
+  function nowTime() {
+    const d = new Date();
+    return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function appendUserMessage(text) {
+    const wrap = document.createElement('div');
+    wrap.className = 'flex justify-end msg-in';
+    wrap.innerHTML = `
+      <div class="max-w-[85%] sm:max-w-[70%]">
+        <div class="btn-gradient text-white rounded-2xl rounded-br-sm px-4 py-3 shadow-sm text-sm leading-relaxed">
+          ${escapeHtml(text)}
+        </div>
+        <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 mr-1 text-right">${nowTime()}</p>
+      </div>
+    `;
+    chatWindow.appendChild(wrap);
+    scrollToBottom();
+  }
+
+  function appendBotMessage(text, time) {
+    const wrap = document.createElement('div');
+    wrap.className = 'flex items-end gap-2.5 msg-in max-w-[85%] sm:max-w-[70%]';
+    wrap.innerHTML = `
+      <div class="w-8 h-8 rounded-full btn-gradient flex items-center justify-center text-white text-xs font-bold flex-shrink-0">SB</div>
+      <div>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border border-teal-50 dark:border-slate-700 text-sm leading-relaxed text-slate-700 dark:text-slate-200 whitespace-pre-line">${escapeHtml(text)}</div>
+        <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 ml-1">Sehat-Bot · ${time || nowTime()}</p>
+      </div>
+    `;
+    chatWindow.appendChild(wrap);
+    scrollToBottom();
+  }
+
+  function showTypingIndicator() {
+    const wrap = document.createElement('div');
+    wrap.id = 'typingIndicator';
+    wrap.className = 'flex items-end gap-2.5 msg-in';
+    wrap.innerHTML = `
+      <div class="w-8 h-8 rounded-full btn-gradient flex items-center justify-center text-white text-xs font-bold flex-shrink-0">SB</div>
+      <div class="bg-white dark:bg-slate-800 rounded-2xl rounded-bl-sm px-4 py-3.5 shadow-sm border border-teal-50 dark:border-slate-700 flex gap-1.5">
+        <span class="typing-dot w-2 h-2 rounded-full bg-teal-400"></span>
+        <span class="typing-dot w-2 h-2 rounded-full bg-teal-400"></span>
+        <span class="typing-dot w-2 h-2 rounded-full bg-teal-400"></span>
+      </div>
+    `;
+    chatWindow.appendChild(wrap);
+    scrollToBottom();
+  }
+
+  function removeTypingIndicator() {
+    const el = document.getElementById('typingIndicator');
+    if (el) el.remove();
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  async function sendMessage(text) {
+    if (!text.trim()) return;
+    appendUserMessage(text.trim());
+    messageInput.value = '';
+    sendBtn.disabled = true;
+    showTypingIndicator();
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text.trim() }),
+      });
+      const data = await res.json();
+      removeTypingIndicator();
+
+      if (res.ok) {
+        appendBotMessage(data.ai_answer, data.timestamp);
+      } else {
+        appendBotMessage('Maaf, terjadi kesalahan. Silakan coba lagi. 🙏');
+      }
+    } catch (err) {
+      removeTypingIndicator();
+      appendBotMessage('Koneksi bermasalah. Silakan periksa jaringan Anda dan coba lagi. 🙏');
+    } finally {
+      sendBtn.disabled = false;
+      messageInput.focus();
+    }
+  }
+
+  chatForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    sendMessage(messageInput.value);
+  });
+
+  document.querySelectorAll('.quick-topic').forEach(btn => {
+    btn.addEventListener('click', () => {
+      sendMessage(btn.dataset.msg);
+    });
+  });
+
+  messageInput.focus();
+</script>
+</body>
+</html>
