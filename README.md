@@ -93,20 +93,20 @@ Dibuat dengan Python, Flask, MySQL, dan Groq Llama-3.1
 - python app.py
 
 
-
-
 ## 📁 Struktur Folder
+
+```bash
 sehat-bot/
-├── app.py                 # Aplikasi utama Flask
-├── requirements.txt       # Daftar package yang dibutuhkan
-├── .env                   # Secret keys 
-├── .gitignore
-├── README.md
-└── templates/
-    ├── index.html         # Halaman depan / landing page
-    ├── login.html         # Halaman masuk
-    ├── register.html      # Halaman daftar
-    └── chat.html          # Halaman chat utama
+├── app.py                    # Aplikasi utama Flask
+├── requirements.txt          # Daftar package yang dibutuhkan
+├── .env                      # Secret keys (JANGAN di-upload)
+├── .gitignore                # Daftar file yang diabaikan Git
+├── README.md                 # Dokumentasi project
+└── templates/                # Folder untuk semua file HTML
+    ├── index.html            # Halaman depan / landing page
+    ├── login.html            # Halaman login
+    ├── register.html         # Halaman daftar akun
+    └── chat.html             # Halaman chat utama dengan AI
 
 
 
