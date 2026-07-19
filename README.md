@@ -1,8 +1,9 @@
 # Sehat-Bot 💊
-Asisten Kesehatan Virtual Berbasis AI + Pengingat Obat
+Asisten Kesehatan Virtual Berbasis AI 
 
 Sehat-Bot adalah aplikasi web Flask yang berfungsi sebagai asisten kesehatan pribadi. 
-Bot bisa diajak chat tentang keluhan ringan, menyimpan riwayat chat di MySQL, dan ada fitur pengingat jadwal minum obat.
+Sehat-Bot adalah aplikasi web Flask yang berfungsi sebagai asisten kesehatan pribadi. 
+Bot bisa diajak chat tentang keluhan kesehatan ringan, menyimpan riwayat percakapan di MySQL, dan memberikan saran kesehatan umum.
 
 Dibuat dengan Python, Flask, MySQL, dan Groq Llama-3.1
 
@@ -32,72 +33,92 @@ Dibuat dengan Python, Flask, MySQL, dan Groq Llama-3.1
 
 
 ### 1. Clone & Masuk Folder
-git clone https://github.com/username/sehat-bot.git
-cd sehat-bot
-
+```
+- git clone https://github.com/username/sehat-bot.git
+- cd sehat-bot
+```
 
 ### 2. Buat Virtual Environment
-python -m venv venv
+```
+- python -m venv venv
 
-# Windows
-venv\Scripts\activate
+- Windows: venv\Scripts\activate
 
-# Mac/Linux
-source venv/bin/activate
-
+- Mac/Linux: source venv/bin/activate
+```
 
 ### 3. Install Library
-pip install -r requirements.txt
+```
+- pip install -r requirements.txt
+```
 
+### 4. Setup Database MySQ
+```
+- Login ke MySQL dan jalankan query ini:
 
+- CREATE DATABASE sehatbot;
 
-### 4. Setup Database MySQL
-Login ke MySQL dan jalankan query ini:
-CREATE DATABASE sehatbot;
-USE sehatbot;
+- USE sehatbot;
 
-CREATE TABLE users (
+- CREATE TABLE users (
+
     id INT AUTO_INCREMENT PRIMARY KEY, 
+    
     name VARCHAR(100) NOT NULL, 
+    
     email VARCHAR(100) UNIQUE NOT NULL, 
+    
     password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE chat_history (
+
+- CREATE TABLE chat_history (
+
     id INT AUTO_INCREMENT PRIMARY KEY, 
+    
     user_id INT NOT NULL, 
+    
     role VARCHAR(20) NOT NULL, 
+    
     message TEXT NOT NULL, 
+    
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+```
 
 
 ### 5. Setup File .env
-Buat file .env di root folder dan isi:
-SECRET_KEY=ubah_jadi_kunci_rahasia_panjang_banget
-GROQ_API_KEY=gsk_masukkan_kunci_groq_kamu_disini
+```
+- Buat file .env di root folder dan isi:
+
+- SECRET_KEY=ubah_jadi_kunci_rahasia_panjang_banget
+
+- GROQ_API_KEY=gsk_masukkan_kunci_groq_kamu_disini
+```
 
 
 ### 6. Jalankan Aplikasi
-python app.py
-
-
-
+```
+- python app.py
+```
 
 ## 📁 Struktur Folder
-sehat-bot/
-├── app.py                 # Aplikasi utama Flask
-├── requirements.txt       # Daftar package yang dibutuhkan
-├── .env                   # Secret keys 
-├── .gitignore
-├── README.md
-└── templates/
-    ├── index.html         # Halaman depan / landing page
-    ├── login.html         # Halaman masuk
-    ├── register.html      # Halaman daftar
-    └── chat.html          # Halaman chat utama
 
+```bash
+sehat-bot/
+├── app.py                    # Aplikasi utama Flask
+├── requirements.txt          # Daftar package yang dibutuhkan
+├── .env                      # Secret keys (JANGAN di-upload)
+├── .gitignore                # Daftar file yang diabaikan Git
+├── README.md                 # Dokumentasi project
+└── templates/                # Folder untuk semua file HTML
+    ├── index.html            # Halaman depan / landing page
+    ├── login.html            # Halaman login
+    ├── register.html         # Halaman daftar akun
+    └── chat.html             # Halaman chat utama dengan AI
+```
 
 
 ### ⚠️ Disclaimer Penting
