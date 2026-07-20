@@ -53,3 +53,16 @@ def get_chat_history(user_id, limit=10):
     finally:
         cursor.close()
         db.close()
+
+
+def add_reminder_to_db(user_id, task, remind_at) :
+    conn = get_db()
+    if conn :
+        cursor = conn.cursor()
+        sql = "insert into reminders(user_id, task, remind_at) values (%s, %s, %s)"
+        cursor.execute(sql,(user_id, task, remind_at))
+        conn.commit() # save ke db
+        cursor.close()
+        conn.close()
+        return True
+    return False

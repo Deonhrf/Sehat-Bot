@@ -81,8 +81,8 @@
     </div>
     <div>
       <p class="font-heading font-semibold text-slate-800 dark:text-white leading-tight">Sehat-Bot</p>
-      <p class="text-xs text-teal-600 dark:text-teal-400 flex items-center gap-1">
-        <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> Online — siap membantu
+      <p id="statusText" class="text-xs text-teal-600 dark:text-teal-400 flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> Online
       </p>
     </div>
   </div>
@@ -102,7 +102,6 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
       </svg>
     </button>
-    <!-- LOGOUT BUTTON -->
     <button id="logoutBtn" title="Keluar" class="w-10 h-10 sm:w-auto sm:px-4 rounded-full flex items-center justify-center gap-1.5 bg-red-50 dark:bg-red-900/30 text-red-500 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 transition text-xs font-medium">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -158,16 +157,16 @@
   <!-- CHAT AREA -->
   <main class="flex-1 flex flex-col min-w-0">
 
-    <div id="chatWindow" class="flex-1 overflow-y-auto px-4 sm:px-8 py-6 space-y-5">
+    <div id="chatWindow" class="flex-1 overflow-y-auto px-4 sm:px-8 py-6 space-y-4">
 
-      <!-- Welcome bubble -->
+      <!-- Bubble sapaan awal, pakai variabel Jinja dari session Flask -->
       <div class="flex items-end gap-2.5 msg-in max-w-[85%] sm:max-w-[70%]">
         <div class="w-8 h-8 rounded-full btn-gradient flex items-center justify-center text-white text-xs font-bold flex-shrink-0">SB</div>
         <div>
           <div class="bg-white dark:bg-slate-800 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border border-teal-50 dark:border-slate-700 text-sm leading-relaxed text-slate-700 dark:text-slate-200">
-            Halo <strong>{{ user_name  | capitalize  }}</strong> ! 👋<br>
-            Saya <strong>Sehat-Bot</strong>, asisten kesehatan virtual Anda. <br> 
-            Ceritakan keluhan atau pertanyaan kesehatan Anda, dan saya akan bantu semaksimal mungkin.
+            Halo <strong>{{ user_name | capitalize }}</strong>! 👋<br>
+            Saya <strong>Sehat-Bot</strong>, asisten kesehatan virtual Anda.<br>
+            Ceritakan keluhan atau pertanyaan kesehatan Anda, ya.
           </div>
           <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 ml-1">Sehat-Bot</p>
         </div>
@@ -183,33 +182,33 @@
       <button class="quick-topic flex-shrink-0 text-xs font-medium bg-white dark:bg-slate-800 border border-teal-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 px-3.5 py-1.5 rounded-full" data-msg="Saya susah tidur akhir-akhir ini">😴 Tidur</button>
     </div>
 
-    <!-- Input bar -->
-    <div class="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-t border-teal-100/70 dark:border-slate-800 px-4 sm:px-8 py-4">
-      <form id="chatForm" class="flex items-end gap-3 max-w-4xl mx-auto">
-        <div class="flex-1 flex items-center bg-teal-50 dark:bg-slate-800 rounded-2xl px-4 py-1 border border-transparent focus-within:border-teal-300 dark:focus-within:border-teal-600 transition">
-          <input
-            id="messageInput"
-            type="text"
-            autocomplete="off"
-            placeholder="Tulis keluhan atau pertanyaan kesehatan Anda..."
-            class="flex-1 bg-transparent outline-none py-3 text-sm text-slate-700 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
-          />
-        </div>
-        <button
-          type="submit"
-          id="sendBtn"
-          class="btn-gradient text-white w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg shadow-teal-500/25 hover:shadow-xl active:scale-95 transition-all flex-shrink-0 disabled:opacity-50"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-          </svg>
-        </button>
-      </form>
-      <p class="text-center text-[11px] text-slate-400 dark:text-slate-500 mt-2.5">
-        Sehat-Bot dapat membuat kesalahan. Untuk kondisi darurat, segera hubungi tenaga medis.
-      </p>
-    </div>
-  </main>
+  <!-- Input bar -->
+  <div class="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-t border-teal-100/70 dark:border-slate-800 px-4 sm:px-8 py-4">
+    <form id="chatForm" class="flex items-end gap-3 max-w-4xl mx-auto">
+      <div class="flex-1 flex items-center bg-teal-50 dark:bg-slate-800 rounded-2xl px-4 py-1 border border-transparent focus-within:border-teal-300 dark:focus-within:border-teal-600 transition">
+        <input
+          id="messageInput"
+          type="text"
+          autocomplete="off"
+          placeholder="Tulis keluhan atau pertanyaan kesehatan Anda..."
+          class="flex-1 bg-transparent outline-none py-3 text-sm text-slate-700 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+        />
+      </div>
+      <button
+        type="submit"
+        id="sendBtn"
+        class="btn-gradient text-white w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg shadow-teal-500/25 hover:shadow-xl active:scale-95 transition-all flex-shrink-0 disabled:opacity-50"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+        </svg>
+      </button>
+    </form>
+    <p class="text-center text-[11px] text-slate-400 dark:text-slate-500 mt-2.5">
+      Sehat-Bot dapat membuat kesalahan. Untuk kondisi darurat, segera hubungi tenaga medis.
+    </p>
+  </div>
+</main>
 </div>
 
 <!-- LOGOUT CONFIRM MODAL -->
@@ -273,7 +272,6 @@
     confirmLogout.disabled = true;
     confirmLogout.textContent = 'Memproses...';
     try {
-      // Sesuaikan endpoint logout backend Anda di sini
       await fetch('/logout', { method: 'POST' });
     } catch (err) {
       // abaikan error jaringan, tetap arahkan ke halaman login
@@ -281,52 +279,59 @@
       window.location.href = '/login';
     }
   });
-
-  // ---------- Chat logic ----------
   const chatWindow = document.getElementById('chatWindow');
   const chatForm = document.getElementById('chatForm');
   const messageInput = document.getElementById('messageInput');
   const sendBtn = document.getElementById('sendBtn');
+  const statusText = document.getElementById('statusText');
 
+  // ---------- Helper: auto-scroll ke pesan paling bawah ----------
   function scrollToBottom() {
     chatWindow.scrollTop = chatWindow.scrollHeight;
   }
 
   function nowTime() {
-    const d = new Date();
-    return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
   }
 
-  function appendUserMessage(text) {
+  // Cegah XSS: teks user/AI ditaruh sebagai text, bukan HTML mentah
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // ---------- addMessage(): 1 fungsi buat 2 jenis bubble (user & AI) ----------
+  function addMessage(text, sender) {
     const wrap = document.createElement('div');
-    wrap.className = 'flex justify-end msg-in';
-    wrap.innerHTML = `
-      <div class="max-w-[85%] sm:max-w-[70%]">
-        <div class="btn-gradient text-white rounded-2xl rounded-br-sm px-4 py-3 shadow-sm text-sm leading-relaxed">
-          ${escapeHtml(text)}
+
+    if (sender === 'user') {
+      wrap.className = 'flex justify-end msg-in';
+      wrap.innerHTML = `
+        <div class="max-w-[85%] sm:max-w-[70%]">
+          <div class="btn-gradient text-white rounded-2xl rounded-br-sm px-4 py-3 shadow-sm text-sm leading-relaxed">
+            ${escapeHtml(text)}
+          </div>
+          <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 mr-1 text-right">${nowTime()}</p>
         </div>
-        <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 mr-1 text-right">${nowTime()}</p>
-      </div>
-    `;
+      `;
+    } else {
+      wrap.className = 'flex items-end gap-2.5 msg-in max-w-[85%] sm:max-w-[70%]';
+      wrap.innerHTML = `
+        <div class="w-8 h-8 rounded-full btn-gradient flex items-center justify-center text-white text-xs font-bold flex-shrink-0">SB</div>
+        <div>
+          <div class="bg-white dark:bg-slate-800 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border border-teal-50 dark:border-slate-700 text-sm leading-relaxed text-slate-700 dark:text-slate-200 whitespace-pre-line">${escapeHtml(text)}</div>
+          <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 ml-1">Sehat-Bot · ${nowTime()}</p>
+        </div>
+      `;
+    }
+
     chatWindow.appendChild(wrap);
     scrollToBottom();
   }
 
-  function appendBotMessage(text, time) {
-    const wrap = document.createElement('div');
-    wrap.className = 'flex items-end gap-2.5 msg-in max-w-[85%] sm:max-w-[70%]';
-    wrap.innerHTML = `
-      <div class="w-8 h-8 rounded-full btn-gradient flex items-center justify-center text-white text-xs font-bold flex-shrink-0">SB</div>
-      <div>
-        <div class="bg-white dark:bg-slate-800 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border border-teal-50 dark:border-slate-700 text-sm leading-relaxed text-slate-700 dark:text-slate-200 whitespace-pre-line">${escapeHtml(text)}</div>
-        <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 ml-1">Sehat-Bot · ${time || nowTime()}</p>
-      </div>
-    `;
-    chatWindow.appendChild(wrap);
-    scrollToBottom();
-  }
-
-  function showTypingIndicator() {
+  // ---------- showTyping() / removeTyping(): indikator "sedang mengetik..." ----------
+  function showTyping() {
     const wrap = document.createElement('div');
     wrap.id = 'typingIndicator';
     wrap.className = 'flex items-end gap-2.5 msg-in';
@@ -342,23 +347,20 @@
     scrollToBottom();
   }
 
-  function removeTypingIndicator() {
+  function removeTyping() {
     const el = document.getElementById('typingIndicator');
     if (el) el.remove();
   }
 
-  function escapeHtml(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  }
-
+  // ---------- Inti: kirim pesan ke backend Flask ----------
   async function sendMessage(text) {
     if (!text.trim()) return;
-    appendUserMessage(text.trim());
+
+    addMessage(text.trim(), 'user');   // 1. tampilkan bubble user dulu
     messageInput.value = '';
     sendBtn.disabled = true;
-    showTypingIndicator();
+    statusText.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span> Mengetik...';
+    showTyping();                      // 2. kasih tanda "lagi diproses"
 
     try {
       const res = await fetch('/api/chat', {
@@ -367,18 +369,19 @@
         body: JSON.stringify({ message: text.trim() }),
       });
       const data = await res.json();
-      removeTypingIndicator();
+      removeTyping();
 
       if (res.ok) {
-        appendBotMessage(data.ai_answer, data.timestamp);
+        addMessage(data.ai_answer, 'bot');       // 3. tampilkan jawaban AI
       } else {
-        appendBotMessage('Maaf, terjadi kesalahan. Silakan coba lagi. 🙏');
+        addMessage('Maaf, terjadi kesalahan di server. Silakan coba lagi. 🙏', 'bot');
       }
     } catch (err) {
-      removeTypingIndicator();
-      appendBotMessage('Koneksi bermasalah. Silakan periksa jaringan Anda dan coba lagi. 🙏');
+      removeTyping();
+      addMessage('Koneksi bermasalah. Periksa jaringan Anda dan coba lagi. 🙏', 'bot');
     } finally {
       sendBtn.disabled = false;
+      statusText.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> Online';
       messageInput.focus();
     }
   }
