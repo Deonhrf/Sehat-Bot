@@ -41,7 +41,7 @@ def api_chat():
 
     save_chat(user_id, "user", message)
     history = get_chat_history(user_id)
-    ai_answer = get_ai_response(user_name, history, message)
+    ai_answer = get_ai_response(user_name, history, message, user_id)
     save_chat(user_id, "assistant", ai_answer)
 
     return jsonify({"ai_answer": ai_answer, "timestamp": datetime.now(timezone.utc).isoformat()})
