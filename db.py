@@ -2,6 +2,7 @@
 import mysql.connector
 import os
 from dotenv import load_dotenv
+from datetime import datetime
 
 load_dotenv()
 
@@ -55,14 +56,32 @@ def get_chat_history(user_id, limit=10):
         db.close()
 
 
-def add_reminder_to_db(user_id, task, remind_at) :
+
+def add_reminder_to_db(user_id, task, remind_at): # parameternya remind_at
     conn = get_db()
-    if conn :
+    if not conn:
+        return False
+    
+    try:
         cursor = conn.cursor()
-        sql = "insert into reminders(user_id, task, remind_at) values (%s, %s, %s)"
-        cursor.execute(sql,(user_id, task, remind_at))
-        conn.commit() # save ke db
-        cursor.close()
-        conn.close()
+        
+        # 2. FIX: ganti remind_at_iso -> remind_at
+        dt = datetime.strptime(remind_at, "%Y-%m-%dT%H:%M:%S")
+        remind_at_mysql = dt.strftime("%Y-%m-%d %H:%M:%S") # 3. hapus yg dobel
+        
+        sql = "INSERT INTO reminders(user_id, task, remind_at) VALUES (%s, %s, %s)"
+        cursor.execute(sql, (user_id, task, remind_at_mysql))
+        conn.commit()
         return True
-    return False
+        
+    except Exception as e:
+        print("DB Error:", e) # biar keliatan errornya apa
+        if conn:
+            conn.rollback()
+        return False
+        
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if conn:
+            conn.close()
