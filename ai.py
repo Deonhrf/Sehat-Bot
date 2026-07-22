@@ -29,13 +29,19 @@ tools = [
     }
 ]
 
+def clean_iso_time(dt_string):
+    """Bersihin waktu dari AI/JS: hapus Z dan milidetik"""
+    if not dt_string:
+        return None
+    return dt_string.replace('Z', '').split('.')[0]
+
 def normalize_ai_response(text, user_name):
     if not text:
         return f"Maaf {user_name}, saya belum memahami. Bisa dijelaskan lagi?"
     text = " ".join(text.split())
     if len(text) > 220:
         text = text[:220].rstrip() + "..."
-    return f"{text} Ini bukan diagnosis medis. Konsultasi ke dokter ya, {user_name}."
+    return f"{text} Semangatt Yahhh {user_name} :)"
 import pytz
 
 def parse_time_to_iso(text):
@@ -99,11 +105,18 @@ Setiap jawaban biasa diakhiri: Ini bukan diagnosis medis. Konsultasi ke dokter y
 
         success = add_reminder_to_db(user_id, task, remind_at) # INI UDAH BISA KEPAKE
         if success:
-            # KODE BARU YG BENER
+            # 1. Bersihin dulu
+            remind_at = clean_iso_time(remind_at)
+    
+            # 2. Convert ke datetime
+            dt = datetime.strptime(remind_at, "%Y-%m-%dT%H:%M:%S")
+            
+            # 3. Kasih label WIB
             tz = pytz.timezone('Asia/Jakarta')
-            dt = datetime.strptime(remind_at, "%Y-%m-%dT%H:%M:%S") # anggap ini udah WIB
-            dt = tz.localize(dt) # kasih label WIB
-            waktu_baca = dt.strftime("%d %b %H:%M") # langsung format, jangan di convert lagi
+            dt = tz.localize(dt)
+    
+            # 4. Format buat dibaca user
+            waktu_baca = dt.strftime("%d %b %H:%M")
             return f"Siap {user_name}! Pengingat '{task}' sudah saya catat untuk {waktu_baca} WIB. Ini bukan diagnosis medis. Konsultasi ke dokter ya."
         else:
             return f"Maaf {user_name}, gagal menyimpan pengingatnya."
