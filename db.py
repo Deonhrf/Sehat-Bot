@@ -55,31 +55,32 @@ def get_chat_history(user_id, limit=10):
         cursor.close()
         db.close()
 
-
-
 def add_reminder_to_db(user_id, task, remind_at): # parameternya remind_at
     conn = get_db()
     if not conn:
         return False
-    
+
     try:
         cursor = conn.cursor()
-        
-        # 2. FIX: ganti remind_at_iso -> remind_at
+
+        # FIX 1: Hapus Z dan.xxx kalau ada
+        remind_at = remind_at.replace('Z', '').split('.')[0]
+
+        # FIX 2: Sekarang baru di strptime
         dt = datetime.strptime(remind_at, "%Y-%m-%dT%H:%M:%S")
-        remind_at_mysql = dt.strftime("%Y-%m-%d %H:%M:%S") # 3. hapus yg dobel
-        
+        remind_at_mysql = dt.strftime("%Y-%m-%d %H:%M:%S")
+
         sql = "INSERT INTO reminders(user_id, task, remind_at) VALUES (%s, %s, %s)"
         cursor.execute(sql, (user_id, task, remind_at_mysql))
         conn.commit()
         return True
-        
+
     except Exception as e:
-        print("DB Error:", e) # biar keliatan errornya apa
+        print("DB Error:", e)
         if conn:
             conn.rollback()
         return False
-        
+
     finally:
         if 'cursor' in locals():
             cursor.close()
