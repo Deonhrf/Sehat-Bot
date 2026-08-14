@@ -11,11 +11,16 @@ __pycache__/
 *.pyd
 
 # Database & Laragon
-db_fais/
 *.db
 *.sqlite3
 dump/
 backups/
+
+# FAISS Vector DB - ignore isinya tapi folder tetap ada
+db_faiss/**
+
+# Uploads - ignore isinya tapi folder tetap ada
+static/uploads/**
 
 # Secret & API Keys
 .env
@@ -45,7 +50,3 @@ __pycache__/
 # Flask specific
 instance/
 .webassets-cache
-
-
-# Uploads
-static/uploads/
