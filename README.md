@@ -30,3 +30,8 @@ Dibuat dengan Python, Flask, MySQL, dan Groq Llama-3.1
 Sehat-Bot adalah asisten informasi kesehatan umum. 
 Ini BUKAN diagnosis medis. 
 Jawaban dari AI hanya saran awal. Untuk keluhan serius, segera konsultasi ke dokter atau tenaga kesehatan profesional.
+
+
+- Kerjakan cara agar pdf tampil pada chat 
+- Hapus tanda notif upload pdf di pages chat bagian bawah
+- Bagaiaman cara pdf yang diberikna user tidak menyatuh dengan user lain. 

@@ -86,3 +86,12 @@ def add_reminder_to_db(user_id, task, remind_at): # parameternya remind_at
             cursor.close()
         if conn:
             conn.close()
+
+def save_pdf(user_id, filename, file_path) :
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("insert into documents(user_id, filename, file_path) values (%s, %s, %s)", (user_id, filename, file_path))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    

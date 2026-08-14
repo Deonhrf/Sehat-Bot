@@ -185,15 +185,23 @@
   <!-- Input bar -->
   <div class="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-t border-teal-100/70 dark:border-slate-800 px-4 sm:px-8 py-4">
     <form id="chatForm" class="flex items-end gap-3 max-w-4xl mx-auto">
-      <div class="flex-1 flex items-center bg-teal-50 dark:bg-slate-800 rounded-2xl px-4 py-1 border border-transparent focus-within:border-teal-300 dark:focus-within:border-teal-600 transition">
-        <input
-          id="messageInput"
-          type="text"
-          autocomplete="off"
-          placeholder="Tulis keluhan atau pertanyaan kesehatan Anda..."
-          class="flex-1 bg-transparent outline-none py-3 text-sm text-slate-700 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
-        />
-      </div>
+       <!-- TOMBOL UPLOAD PDF -->
+      <label for="pdfInput" title="Upload PDF" class="w-12 h-12 flex-shrink-0 rounded-2xl bg-teal-50 dark:bg-slate-800 border border-teal-100 dark:border-slate-700 text-teal-600 dark:text-teal-400 flex items-center justify-center cursor-pointer hover:bg-teal-100 dark:hover:bg-slate-700 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v12m0-12l4 4m-4-4L8 8M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
+        </svg>
+        <input type="file" id="pdfInput" accept="application/pdf" class="hidden" />
+      </label>
+        <div class="flex-1 flex items-center bg-teal-50 dark:bg-slate-800 rounded-2xl px-4 py-1 border border-transparent focus-within:border-teal-300 dark:focus-within:border-teal-600 transition">
+          <input
+            id="messageInput"
+            type="text"
+            autocomplete="off"
+            placeholder="Tulis keluhan atau pertanyaan kesehatan Anda..."
+            class="flex-1 bg-transparent outline-none py-3 text-sm text-slate-700 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+          />
+        </div>
+
       <button
         type="submit"
         id="sendBtn"
@@ -204,6 +212,8 @@
         </svg>
       </button>
     </form>
+    <p id="pdfStatus" class="text-center text-xs text-teal-600 dark:text-teal-400 mt-2 hidden"></p>
+
     <p class="text-center text-[11px] text-slate-400 dark:text-slate-500 mt-2.5">
       Sehat-Bot dapat membuat kesalahan. Untuk kondisi darurat, segera hubungi tenaga medis.
     </p>
@@ -227,7 +237,6 @@
     </div>
   </div>
 </div>
-
 <script>
   // ---------- Dark mode ----------
   const darkToggle = document.getElementById('darkToggle');
@@ -255,66 +264,40 @@
   const cancelLogout = document.getElementById('cancelLogout');
   const confirmLogout = document.getElementById('confirmLogout');
 
-  function openLogoutModal() {
-    logoutModal.classList.remove('hidden-modal');
-  }
-  function closeLogoutModal() {
-    logoutModal.classList.add('hidden-modal');
-  }
-
+  function openLogoutModal() { logoutModal.classList.remove('hidden-modal'); }
+  function closeLogoutModal() { logoutModal.classList.add('hidden-modal'); }
   logoutBtn.addEventListener('click', openLogoutModal);
   cancelLogout.addEventListener('click', closeLogoutModal);
-  logoutModal.addEventListener('click', (e) => {
-    if (e.target === logoutModal) closeLogoutModal();
-  });
-
+  logoutModal.addEventListener('click', (e) => { if (e.target === logoutModal) closeLogoutModal(); });
   confirmLogout.addEventListener('click', async () => {
     confirmLogout.disabled = true;
     confirmLogout.textContent = 'Memproses...';
-    try {
-      await fetch('/logout', { method: 'POST' });
-    } catch (err) {
-      // abaikan error jaringan, tetap arahkan ke halaman login
-    } finally {
-      window.location.href = '/login';
-    }
+    try { await fetch('/logout', { method: 'POST' }); } 
+    finally { window.location.href = '/login'; }
   });
+
   const chatWindow = document.getElementById('chatWindow');
   const chatForm = document.getElementById('chatForm');
   const messageInput = document.getElementById('messageInput');
   const sendBtn = document.getElementById('sendBtn');
   const statusText = document.getElementById('statusText');
+  const pdfInput = document.getElementById('pdfInput');
+  const pdfStatus = document.getElementById('pdfStatus');
 
-  // ---------- Helper: auto-scroll ke pesan paling bawah ----------
-  function scrollToBottom() {
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-  }
+  function scrollToBottom() { chatWindow.scrollTop = chatWindow.scrollHeight; }
+  function nowTime() { return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }); }
+  function escapeHtml(str) { const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
 
-  function nowTime() {
-    return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-  }
-
-  // Cegah XSS: teks user/AI ditaruh sebagai text, bukan HTML mentah
-  function escapeHtml(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  }
-
-  // ---------- addMessage(): 1 fungsi buat 2 jenis bubble (user & AI) ----------
+  // ---------- 1. Bubble Chat Biasa ----------
   function addMessage(text, sender) {
     const wrap = document.createElement('div');
-
     if (sender === 'user') {
       wrap.className = 'flex justify-end msg-in';
       wrap.innerHTML = `
         <div class="max-w-[85%] sm:max-w-[70%]">
-          <div class="btn-gradient text-white rounded-2xl rounded-br-sm px-4 py-3 shadow-sm text-sm leading-relaxed">
-            ${escapeHtml(text)}
-          </div>
+          <div class="btn-gradient text-white rounded-2xl rounded-br-sm px-4 py-3 shadow-sm text-sm leading-relaxed">${escapeHtml(text)}</div>
           <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 mr-1 text-right">${nowTime()}</p>
-        </div>
-      `;
+        </div>`;
     } else {
       wrap.className = 'flex items-end gap-2.5 msg-in max-w-[85%] sm:max-w-[70%]';
       wrap.innerHTML = `
@@ -322,46 +305,48 @@
         <div>
           <div class="bg-white dark:bg-slate-800 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border border-teal-50 dark:border-slate-700 text-sm leading-relaxed text-slate-700 dark:text-slate-200 whitespace-pre-line">${escapeHtml(text)}</div>
           <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 ml-1">Sehat-Bot · ${nowTime()}</p>
-        </div>
-      `;
+        </div>`;
     }
-
     chatWindow.appendChild(wrap);
     scrollToBottom();
   }
 
-  // ---------- showTyping() / removeTyping(): indikator "sedang mengetik..." ----------
+  // ---------- 2. [BARU] Bubble Khusus File PDF ----------
+  function addFileMessage(filename, fileUrl) {
+    const wrap = document.createElement('div');
+    wrap.className = 'flex items-end gap-2.5 msg-in max-w-[85%] sm:max-w-[70%]';
+    wrap.innerHTML = `
+      <div class="w-8 h-8 rounded-full btn-gradient flex items-center justify-center text-white text-xs font-bold flex-shrink-0">SB</div>
+      <div class="bg-white dark:bg-slate-800 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border-teal-50 dark:border-slate-700 text-sm">
+        <p class="font-semibold text-slate-700 dark:text-slate-200 mb-2">📄 ${escapeHtml(filename)}</p>
+        <a href="${fileUrl}" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-medium text-white btn-gradient px-3 py-1.5 rounded-lg hover:opacity-90 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+          Lihat PDF
+        </a>
+        <iframe src="${fileUrl}" class="w-full h-80 mt-3 rounded-lg border border-slate-200 dark:border-slate-700"></iframe>
+      </div>`;
+    chatWindow.appendChild(wrap);
+    scrollToBottom();
+  }
+
   function showTyping() {
     const wrap = document.createElement('div');
     wrap.id = 'typingIndicator';
     wrap.className = 'flex items-end gap-2.5 msg-in';
-    wrap.innerHTML = `
-      <div class="w-8 h-8 rounded-full btn-gradient flex items-center justify-center text-white text-xs font-bold flex-shrink-0">SB</div>
-      <div class="bg-white dark:bg-slate-800 rounded-2xl rounded-bl-sm px-4 py-3.5 shadow-sm border border-teal-50 dark:border-slate-700 flex gap-1.5">
-        <span class="typing-dot w-2 h-2 rounded-full bg-teal-400"></span>
-        <span class="typing-dot w-2 h-2 rounded-full bg-teal-400"></span>
-        <span class="typing-dot w-2 h-2 rounded-full bg-teal-400"></span>
-      </div>
-    `;
+    wrap.innerHTML = `<div class="w-8 h-8 rounded-full btn-gradient flex items-center justify-center text-white text-xs font-bold flex-shrink-0">SB</div><div class="bg-white dark:bg-slate-800 rounded-2xl rounded-bl-sm px-4 py-3.5 shadow-sm border-teal-50 dark:border-slate-700 flex gap-1.5"><span class="typing-dot w-2 h-2 rounded-full bg-teal-400"></span><span class="typing-dot w-2 h-2 rounded-full bg-teal-400"></span><span class="typing-dot w-2 h-2 rounded-full bg-teal-400"></span></div>`;
     chatWindow.appendChild(wrap);
     scrollToBottom();
   }
+  function removeTyping() { document.getElementById('typingIndicator')?.remove(); }
 
-  function removeTyping() {
-    const el = document.getElementById('typingIndicator');
-    if (el) el.remove();
-  }
-
-  // ---------- Inti: kirim pesan ke backend Flask ----------
+  // ---------- 3. Kirim Chat ----------
   async function sendMessage(text) {
     if (!text.trim()) return;
-
-    addMessage(text.trim(), 'user');   // 1. tampilkan bubble user dulu
+    addMessage(text.trim(), 'user');
     messageInput.value = '';
     sendBtn.disabled = true;
     statusText.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span> Mengetik...';
-    showTyping();                      // 2. kasih tanda "lagi diproses"
-
+    showTyping();
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
@@ -370,12 +355,8 @@
       });
       const data = await res.json();
       removeTyping();
-
-      if (res.ok) {
-        addMessage(data.ai_answer, 'bot');       // 3. tampilkan jawaban AI
-      } else {
-        addMessage('Maaf, terjadi kesalahan di server. Silakan coba lagi. 🙏', 'bot');
-      }
+      if (res.ok) { addMessage(data.ai_answer, 'bot'); } 
+      else { addMessage('Maaf, terjadi kesalahan di server. Silakan coba lagi. 🙏', 'bot'); }
     } catch (err) {
       removeTyping();
       addMessage('Koneksi bermasalah. Periksa jaringan Anda dan coba lagi. 🙏', 'bot');
@@ -386,15 +367,42 @@
     }
   }
 
-  chatForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    sendMessage(messageInput.value);
-  });
+  chatForm.addEventListener('submit', (e) => { e.preventDefault(); sendMessage(messageInput.value); });
+  document.querySelectorAll('.quick-topic').forEach(btn => { btn.addEventListener('click', () => { sendMessage(btn.dataset.msg); }); });
 
-  document.querySelectorAll('.quick-topic').forEach(btn => {
-    btn.addEventListener('click', () => {
-      sendMessage(btn.dataset.msg);
-    });
+  // ---------- 4. [DIUBAH] Upload PDF ----------
+  pdfInput.addEventListener('change', async () => {
+    const file = pdfInput.files[0];
+    if (!file) return;
+
+    addMessage(`Mengunggah: ${file.name}`, 'user'); // 1. Tampilkan di chat
+    pdfStatus.classList.remove('hidden');
+    pdfStatus.textContent = '⏳ Mengunggah dan memproses PDF...';
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/upload_pdf', { method: 'POST', body: formData });
+      const data = await res.json();
+
+      if (res.ok && data.status === 'sukses') {
+        pdfStatus.textContent = '✅ PDF siap ditanya';
+        addFileMessage(data.filename, data.file_url); // 2. Tampilkan bubble PDF
+        addMessage("✅ PDF berhasil diupload. Silakan tanya isi PDF nya ya", 'bot'); // 3. Bot balas
+      } else {
+        pdfStatus.textContent = `❌ ${data.error || 'Gagal memproses PDF'}`;
+        pdfStatus.classList.add('text-red-500');
+        addMessage(`❌ Gagal upload PDF: ${data.error || 'Coba lagi'}`, 'bot');
+      }
+    } catch (err) {
+      pdfStatus.textContent = '❌ Koneksi bermasalah saat upload PDF.';
+      pdfStatus.classList.add('text-red-500');
+      addMessage('❌ Koneksi bermasalah saat upload PDF.', 'bot');
+    } finally {
+      pdfInput.value = '';
+      setTimeout(() => pdfStatus.classList.add('hidden'), 3000);
+    }
   });
 
   messageInput.focus();
