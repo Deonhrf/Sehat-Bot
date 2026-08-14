@@ -16,6 +16,12 @@ __pycache__/
 dump/
 backups/
 
+# FAISS Vector DB - ignore isinya tapi folder tetap ada
+db_faiss/**
+
+# Uploads - ignore isinya tapi folder tetap ada
+static/uploads/**
+
 # Secret & API Keys
 .env
 config.py
