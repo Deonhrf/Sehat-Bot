@@ -18,9 +18,11 @@ backups/
 
 # FAISS Vector DB - ignore isinya tapi folder tetap ada
 db_faiss/**
+!db_faiss/.gitkeep
 
 # Uploads - ignore isinya tapi folder tetap ada
 static/uploads/**
+!static/uploads/.gitkeep
 
 # Secret & API Keys
 .env
