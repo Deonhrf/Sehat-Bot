@@ -7,6 +7,8 @@ Bot bisa diajak chat tentang keluhan kesehatan ringan, menyimpan riwayat percaka
 
 Dibuat dengan Python, Flask, MySQL, dan Groq Llama-3.1
 
+<img width="1888" height="968" alt="image" src="img/Dashboard chat.png" />
+
 ## ✨ Fitur Utama
 
 - **🔐 Autentikasi**: Register & Login aman dengan password hashing Werkzeug
