@@ -4,7 +4,6 @@ Asisten Kesehatan Virtual Berbasis AI
 Sehat-Bot adalah aplikasi web Flask yang berfungsi sebagai asisten kesehatan pribadi. 
 Sehat-Bot adalah aplikasi web Flask yang berfungsi sebagai asisten kesehatan pribadi. 
 Bot bisa diajak chat tentang keluhan kesehatan ringan, menyimpan riwayat percakapan di MySQL, dan memberikan saran kesehatan umum.
-
 Dibuat dengan Python, Flask, MySQL, dan Groq Llama-3.1
 
 
