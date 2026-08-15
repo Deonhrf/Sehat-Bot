@@ -6,7 +6,16 @@ Sehat-Bot adalah aplikasi web Flask yang berfungsi sebagai asisten kesehatan pri
 Bot bisa diajak chat tentang keluhan kesehatan ringan, menyimpan riwayat percakapan di MySQL, dan memberikan saran kesehatan umum.
 
 Dibuat dengan Python, Flask, MySQL, dan Groq Llama-3.1
+##  Index
+<img width="1888" height="968" alt="image" src="img/Dashboard chat.png" />
 
+### Login
+<img width="1888" height="968" alt="image" src="img/Dashboard chat.png" />
+
+### Register
+<img width="1888" height="968" alt="image" src="img/Dashboard chat.png" />
+
+### Dashboard chat
 <img width="1888" height="968" alt="image" src="img/Dashboard chat.png" />
 
 ## ✨ Fitur Utama
